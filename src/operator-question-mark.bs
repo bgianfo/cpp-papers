@@ -10,7 +10,7 @@ Group: WG21
 Editor: Brian Gianforcaro, bgianf@serenityos.org
 Abstract: The postfix operator <code>?</code> short circuits execution flow by returning the error value contained by optional error types like <code>std::expected&ltT,E&gt</code>.
 Abstract: If the type contains no error value, then control continues as normal, and the value contained by the <code>std::expected&ltT,E&gt</code> is the result of the expression.
-Date: 2020-08-25
+Date: 2021-08-25
 Markup Shorthands: markdown yes
 </pre>
 
