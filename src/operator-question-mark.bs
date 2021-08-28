@@ -1,6 +1,6 @@
 <pre class=metadata>
-Title: Error propagation via postfix operator question mark.
-Shortname: postfix operator question mark
+Title: Error propagation via postfix operator <code>?</code>
+Shortname: P0TBD
 Revision: 0
 Audience: LWG
 Status: D
