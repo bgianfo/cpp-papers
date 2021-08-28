@@ -18,5 +18,5 @@ on every push to master.
 - [How To Submit a Proposal](https://isocpp.org/std/submit-a-proposal)
 
 [bikeshed]: https://github.com/tabatkins/bikeshed
-[operator-question-mark]: https://serenityos.github.io/cpp-papers/operator-question-mark
+[operator-question-mark]: https://serenityos.github.io/cpp-papers/operator-question-mark/
 
