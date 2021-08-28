@@ -30,9 +30,9 @@ Similar functionality has been used with success in other languages, such as rus
 
 # Motivation # {#motivation}
 
-## Use Cases # {#use-cases}
+## Use Cases ## {#use-cases}
 
-### Networking Stack Error Handling # {#networking-stack-error-handling-use-case}
+### Networking Stack Error Handling ### {#networking-stack-error-handling-use-case}
 
 The following is an example of how the SerenityOS Kernel networking stack ([creates a socket pair](https://github.com/SerenityOS/serenity/blob/283d8d39289db37db53c74738813e193ccfee1a1/Kernel/Net/LocalSocket.cpp), where `KResultOr<T>` is a type much like `std::expected<T,E>`
 where it's contract is to return a kernel error enum value, or a value of the template parameter `T`.
