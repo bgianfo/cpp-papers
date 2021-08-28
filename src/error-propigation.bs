@@ -1,0 +1,103 @@
+<pre class=metadata>
+Title: Error propagation via postfix operator question mark.
+Shortname: postfix operator question mark
+Revision: 0
+Audience: LWG
+Status: D
+ED: TBD
+Group: WG21
+!Source: <a href="https://github.com/SerenityOS/cpp-papers/blob/master/src/error-propigation.bs">https://github.com/SerenityOS/cpp-papers/blob/master/src/error-propigation.bs</a>
+Editor: Brian Gianforcaro, bgianf@serenityos.org
+Abstract: The postfix operator ? short circuits execution flow by returning the error value contained optional error types like `std::expected`.
+Abstract: If the type contains no error value, then control continues as normal, and the value contained by the `std::expecteed` is the result of the expression.
+Date: 2020-08-25
+Markup Shorthands: markdown yes
+</pre>
+
+# Introduction # {#introduction}
+
+The postfix operator ? is designed to operate on utility classes like `std::optional<T>` or `std::expected<T,E>`.
+These types are designed to express that the result of some computation could produce a value `T` or and error `E`,
+or in the case of `std::optional<T>` the absence of a value.
+
+When utilizing these types in real world programs, a significant amount of program logic ends up revolving around
+handling failure paths and properly propagating errors to the calling function.
+
+To mitigate the need for this boilerplate the postfix operator `?` can be used to automatically obtain values from
+success cases, and return the error value if present instead.
+
+Similar functionality has been used with success in other languages, such as rusts [trait based exception handling](https://github.com/rust-lang/rfcs/blob/master/text/0243-trait-based-exception-handling.md).
+
+# Motivation # {#motivation}
+
+## Use Cases # {#use-cases}
+
+### Networking Stack Error Handling # {#networking-stack-error-handling-use-case}
+
+The following is an example of how the SerenityOS Kernel networking stack ([creates a socket pair](https://github.com/SerenityOS/serenity/blob/283d8d39289db37db53c74738813e193ccfee1a1/Kernel/Net/LocalSocket.cpp), where `KResultOr<T>` is a type much like `std::expected<T,E>`
+where it's contract is to return a kernel error enum value, or a value of the template parameter `T`.
+
+```cpp
+KResultOr<SocketPair> LocalSocket::create_connected_pair(int type)
+{
+    auto socket_or_error = LocalSocket::create(type);
+    if (socket_or_error.is_error())
+        return socket_or_error.error();
+
+    auto socket = static_ptr_cast<LocalSocket>(socket_or_error.release_value());
+    auto description1_result = FileDescription::create(*socket);
+    if (description1_result.is_error())
+        return description1_result.error();
+
+    socket->m_address.sun_family = AF_LOCAL;
+    memcpy(socket->m_address.sun_path, "[socketpair]", 13);
+
+    auto& process = Process::current();
+    socket->m_acceptor = { process.pid().value(), process.uid(), process.gid() };
+
+    socket->set_connected(true);
+    socket->set_connect_side_role(Role::Connected);
+    socket->m_role = Role::Accepted;
+
+    auto description2_result = FileDescription::create(*socket);
+    if (description2_result.is_error())
+        return description2_result.error();
+
+    return SocketPair { description1_result.release_value(), description2_result.release_value() };
+}
+```
+
+If we rewrite this code to instead use the proposed postfix operator `?` syntax, we get:
+```cpp
+KResultOr<SocketPair> LocalSocket::create_connected_pair(int type)
+{
+    auto socket = LocalSocket::create(type)?;
+    auto description1 = FileDescription::create(*socket)?;
+
+    socket->m_address.sun_family = AF_LOCAL;
+    memcpy(socket->m_address.sun_path, "[socketpair]", 13);
+
+    auto& process = Process::current();
+    socket->m_acceptor = { process.pid().value(), process.uid(), process.gid() };
+
+    socket->set_connected(true);
+    socket->set_connect_side_role(Role::Connected);
+    socket->m_role = Role::Accepted;
+
+    auto description2 = FileDescription::create(*socket)?;
+
+    return SocketPair { description1, description2 };
+}
+```
+
+# Proposal # {#proposal}
+
+# Design rationale # {#design-rational}
+
+# Proposed wording # {#proposed-wording}
+
+# Implementability # {#implementability}
+
+# Acknowledgements # {#acknowledgements}
+
+# References # {#references}

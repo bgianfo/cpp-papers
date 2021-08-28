@@ -7,9 +7,9 @@ Papers are currently written in the [bikeshed] format, and are stored under the
 
 # Current Proposals
 
-| Number |                    Title                    |   Standard        |              Status                    |
-|:------:|:-------------------------------------------:|:-----------------:|:--------------------------------------:|
-|  TBD   |     Error Propagation Via Operator '?'      |  Post C++23?      |        Working on a draft.             |
+| Number |  File                                                |            Title                    |   Standard    |        Status           |
+|:------:|:----------------------------------------------------:|:-----------------------------------:|:-------------:|:-----------------------:|
+|  TBD   | [src/error-propigation.bs](src/error-propigation.bs) |  Error Propagation Via Operator '?' |  Post C++23?  |   Working on a draft.   |
 
 
 # Links
