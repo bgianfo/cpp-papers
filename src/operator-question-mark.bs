@@ -8,7 +8,7 @@ ED: TBD
 Group: WG21
 !Source: <a href="https://github.com/SerenityOS/cpp-papers/blob/master/src/operator-question-mark.bs">https://github.com/SerenityOS/cpp-papers/blob/master/src/operator-question-mark.bs</a>
 Editor: Brian Gianforcaro, bgianf@serenityos.org
-Abstract: The postfix operator <code>?</code> short circuits execution flow by returning the error value contained optional error types like <code>std::expected</code>.
+Abstract: The postfix operator <code>?</code> short circuits execution flow by returning the error value contained by optional error types like <code>std::expected</code>.
 Abstract: If the type contains no error value, then control continues as normal, and the value contained by the <code>std::expected</code> is the result of the expression.
 Date: 2020-08-25
 Markup Shorthands: markdown yes
@@ -17,7 +17,7 @@ Markup Shorthands: markdown yes
 # Introduction # {#introduction}
 
 The postfix operator `?` is designed to operate on utility classes like `std::optional<T>` or `std::expected<T,E>`.
-These types are designed to express that the result of some computation could produce a value `T` or and error `E`,
+These types are designed to express that the result of some computation could produce a value `T` or an error `E`,
 or in the case of `std::optional<T>` the absence of a value.
 
 When utilizing these types in real world programs, a significant amount of program logic ends up revolving around
@@ -26,7 +26,7 @@ handling failure paths and properly propagating errors to the calling function.
 To mitigate the need for this boilerplate the postfix operator `?` can be used to automatically obtain values from
 success cases, and return the error value if present instead.
 
-Similar functionality has been used with success in other languages, such as rusts [trait based exception handling](https://github.com/rust-lang/rfcs/blob/master/text/0243-trait-based-exception-handling.md).
+Similar functionality has been used with success in other languages, such as rust's [trait based exception handling](https://github.com/rust-lang/rfcs/blob/master/text/0243-trait-based-exception-handling.md).
 
 # Motivation # {#motivation}
 
@@ -34,8 +34,8 @@ Similar functionality has been used with success in other languages, such as rus
 
 ### Networking Stack Error Handling ### {#networking-stack-error-handling-use-case}
 
-The following is an example of how the SerenityOS Kernel networking stack ([creates a socket pair](https://github.com/SerenityOS/serenity/blob/283d8d39289db37db53c74738813e193ccfee1a1/Kernel/Net/LocalSocket.cpp), where `KResultOr<T>` is a type much like `std::expected<T,E>`
-where it's contract is to return a kernel error enum value, or a value of the template parameter `T`.
+The following is an example of how the SerenityOS Kernel networking stack [creates a socket pair](https://github.com/SerenityOS/serenity/blob/283d8d39289db37db53c74738813e193ccfee1a1/Kernel/Net/LocalSocket.cpp), where `KResultOr<T>` is a type much like `std::expected<T,E>`
+where its contract is to return a kernel error enum value, or a value of the template parameter `T`.
 
 ```cpp
 KResultOr<SocketPair> LocalSocket::create_connected_pair(int type)
