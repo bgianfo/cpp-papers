@@ -14,5 +14,5 @@ jobs:
         with:
           TOOLCHAIN: bikeshed
           SOURCE: src/operator-question-mark.bs
-          DESTINATION: index.html
+          DESTINATION: operator-question-mark/index.html
           GH_PAGES_BRANCH: gh-pages
