@@ -1563,7 +1563,7 @@ Possible extra rowspan handling
   <meta content="Bikeshed version 4f053d00e, updated Tue Aug 10 14:13:32 2021 -0700" name="generator">
   <link href="TBD" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="655d25c6de8b482344a8aaf02af54e291fd30d02" name="document-revision">
+  <meta content="aa9317ef0e71cc9bf5a94bcaf9ed619bfc46895c" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -2178,7 +2178,7 @@ success cases, or return the error value if present instead.</p>
 
     <c- k>auto</c-> <c- n>description2</c-> <c- o>=</c-> <c- n>FileDescription</c-><c- o>::</c-><c- n>create</c-><c- p>(</c-><c- o>*</c-><c- n>socket</c-><c- p>)</c-><c- o>?</c-><c- p>;</c->
 
-    <c- k>return</c-> <c- n>SocketPair</c-> <c- p>{</c-> <c- n>description1</c-><c- p>,</c-> <c- n>description2</c-> <c- p>};</c->
+    <c- k>return</c-> <c- n>SocketPair</c-> <c- p>{</c-> <c- n>move</c-><c- p>(</c-><c- n>description1</c-><c- p>),</c-> <c- n>move</c-><c- p>(</c-><c- n>description2</c-><c- p>)</c-> <c- p>};</c->
 <c- p>}</c->
 </pre>
    <h2 class="heading settled" data-level="3" id="proposal"><span class="secno">3. </span><span class="content">Proposal</span><a class="self-link" href="#proposal"></a></h2>
