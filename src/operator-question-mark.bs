@@ -24,7 +24,7 @@ When utilizing these types in real world programs, a significant amount of progr
 handling failure paths and properly propagating errors to the calling function.
 
 To mitigate the need for this boilerplate the postfix operator `?` can be used to automatically obtain values from
-success cases, and return the error value if present instead.
+success cases, or return the error value if present instead.
 
 Similar functionality has been used with success in other languages, such as rust's [trait based exception handling](https://github.com/rust-lang/rfcs/blob/master/text/0243-trait-based-exception-handling.md).
 
