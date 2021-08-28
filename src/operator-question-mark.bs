@@ -6,10 +6,10 @@ Audience: LWG
 Status: D
 ED: TBD
 Group: WG21
-!Source: <a href="https://github.com/SerenityOS/cpp-papers/blob/master/src/error-propigation.bs">https://github.com/SerenityOS/cpp-papers/blob/master/src/error-propigation.bs</a>
+!Source: <a href="https://github.com/SerenityOS/cpp-papers/blob/master/src/operator-question-mark.bs">https://github.com/SerenityOS/cpp-papers/blob/master/src/operator-question-mark.bs</a>
 Editor: Brian Gianforcaro, bgianf@serenityos.org
 Abstract: The postfix operator ? short circuits execution flow by returning the error value contained optional error types like `std::expected`.
-Abstract: If the type contains no error value, then control continues as normal, and the value contained by the `std::expecteed` is the result of the expression.
+Abstract: If the type contains no error value, then control continues as normal, and the value contained by the `std::expected` is the result of the expression.
 Date: 2020-08-25
 Markup Shorthands: markdown yes
 </pre>
