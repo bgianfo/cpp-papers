@@ -16,7 +16,7 @@ Markup Shorthands: markdown yes
 
 # Introduction # {#introduction}
 
-The postfix operator `?` is designed to operate on utility classes like `std::optional<T>` or `std::expected<T,E>`.
+The postfix operator `?` is designed to operate on utility classes like `std::optional<T>`[[N3793]] or `std::expected<T,E>` [[P0323r10]].
 These types are designed to express that the result of some computation could produce a value `T` or an error `E`,
 or in the case of `std::optional<T>` the absence of a value.
 
@@ -99,5 +99,3 @@ KResultOr<SocketPair> LocalSocket::create_connected_pair(int type)
 # Implementability # {#implementability}
 
 # Acknowledgements # {#acknowledgements}
-
-# References # {#references}
