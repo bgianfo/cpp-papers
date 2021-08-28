@@ -2,7 +2,7 @@
  <head>
   <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
-  <title>postfix operator question markR0: Error propagation via postfix operator question mark.</title>
+  <title>P0TBDR0: Error propagation via postfix operator &lt;code>?&lt;/code></title>
 <style data-fill-with="stylesheet">/******************************************************************************
  *                   Style sheet for the W3C specifications                   *
  *
@@ -1561,9 +1561,9 @@ Possible extra rowspan handling
     blockquote c-[il] { color: inherit; } /* Literal.Number.Integer.Long */
   </style>
   <meta content="Bikeshed version 4f053d00e, updated Tue Aug 10 14:13:32 2021 -0700" name="generator">
-  <link href="TBD" rel="canonical">
+  <link href="https://wg21.link/P0TBD" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="aa9317ef0e71cc9bf5a94bcaf9ed619bfc46895c" name="document-revision">
+  <meta content="5b0000f6ac8f11bfe298e2f4e7af567a0956b3b6" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -2072,12 +2072,12 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
  <body class="h-entry">
   <div class="head">
    <p data-fill-with="logo"></p>
-   <h1 class="p-name no-ref" id="title">postfix operator question markR0<br>Error propagation via postfix operator question mark.</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="profile-and-date"><span class="content">Draft Proposal, <time class="dt-updated" datetime="2020-08-25">2020-08-25</time></span></h2>
+   <h1 class="p-name no-ref" id="title">P0TBDR0<br>Error propagation via postfix operator <code class="highlight"><c- o>?</c-></code></h1>
+   <h2 class="no-num no-toc no-ref heading settled" id="profile-and-date"><span class="content">Draft Proposal, <time class="dt-updated" datetime="2021-08-25">2021-08-25</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
-     <dd><a class="u-url" href="TBD">TBD</a>
+     <dd><a class="u-url" href="https://wg21.link/P0TBD">https://wg21.link/P0TBD</a>
      <dt class="editor">Author:
      <dd class="editor p-author h-card vcard"><a class="p-name fn u-email email" href="mailto:bgianf@serenityos.org">Brian Gianforcaro</a>
      <dt>Audience:
@@ -2093,9 +2093,9 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   </div>
   <div class="p-summary" data-fill-with="abstract">
    <h2 class="no-num no-toc no-ref heading settled" id="abstract"><span class="content">Abstract</span></h2>
-   <p>The postfix operator <code class="highlight"><c- o>?</c-></code> short circuits execution flow by returning the error value contained by optional error types like <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>expected</c-></code>.
+   <p>The postfix operator <code class="highlight"><c- o>?</c-></code> short circuits execution flow by returning the error value contained by optional error types like <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>expected</c-><c- o>&lt;</c-><c- n>T</c-><c- p>,</c-><c- n>E</c-><c- o>></c-></code>.
 
-If the type contains no error value, then control continues as normal, and the value contained by the <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>expected</c-></code> is the result of the expression.</p>
+If the type contains no error value, then control continues as normal, and the value contained by the <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>expected</c-><c- o>&lt;</c-><c- n>T</c-><c- p>,</c-><c- n>E</c-><c- o>></c-></code> is the result of the expression.</p>
   </div>
   <nav data-fill-with="table-of-contents" id="toc">
    <h2 class="no-num no-toc no-ref" id="contents">Table of Contents</h2>
@@ -2115,19 +2115,29 @@ If the type contains no error value, then control continues as normal, and the v
     <li><a href="#proposed-wording"><span class="secno">5</span> <span class="content">Proposed wording</span></a>
     <li><a href="#implementability"><span class="secno">6</span> <span class="content">Implementability</span></a>
     <li><a href="#acknowledgements"><span class="secno">7</span> <span class="content">Acknowledgements</span></a>
-    <li><a href="#references"><span class="secno">8</span> <span class="content">References</span></a>
+    <li>
+     <a href="#references"><span class="secno"></span> <span class="content">References</span></a>
+     <ol class="toc">
+      <li><a href="#informative"><span class="secno"></span> <span class="content">Informative References</span></a>
+     </ol>
    </ol>
   </nav>
   <main>
    <h2 class="heading settled" data-level="1" id="introduction"><span class="secno">1. </span><span class="content">Introduction</span><a class="self-link" href="#introduction"></a></h2>
-   <p>The postfix operator <code class="highlight"><c- o>?</c-></code> is designed to operate on utility classes like <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>optional</c-><c- o>&lt;</c-><c- n>T</c-><c- o>></c-></code> or <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>expected</c-><c- o>&lt;</c-><c- n>T</c-><c- p>,</c-><c- n>E</c-><c- o>></c-></code>.
+   <p>The postfix operator <code class="highlight"><c- o>?</c-></code> is designed to operate on utility classes like <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>optional</c-><c- o>&lt;</c-><c- n>T</c-><c- o>></c-></code><a data-link-type="biblio" href="#biblio-n3793">[N3793]</a> or <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>expected</c-><c- o>&lt;</c-><c- n>T</c-><c- p>,</c-><c- n>E</c-><c- o>></c-></code> <a data-link-type="biblio" href="#biblio-p0323r10">[P0323r10]</a>.
 These types are designed to express that the result of some computation could produce a value <code class="highlight"><c- n>T</c-></code> or an error <code class="highlight"><c- n>E</c-></code>,
 or in the case of <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>optional</c-><c- o>&lt;</c-><c- n>T</c-><c- o>></c-></code> the absence of a value.</p>
    <p>When utilizing these types in real world programs, a significant amount of program logic ends up revolving around
 handling failure paths and properly propagating errors to the calling function.</p>
    <p>To mitigate the need for this boilerplate the postfix operator <code class="highlight"><c- o>?</c-></code> can be used to automatically obtain values from
 success cases, or return the error value if present instead.</p>
-   <p>Similar functionality has been used with success in other languages, such as rust’s <a href="https://github.com/rust-lang/rfcs/blob/master/text/0243-trait-based-exception-handling.md">trait based exception handling</a>.</p>
+   <p>Similar functionality has been used with success in other languages, such as:</p>
+   <ul>
+    <li data-md>
+     <p><a href="https://github.com/rust-lang/rfcs/blob/master/text/0243-trait-based-exception-handling.md">Trait based exception handling</a> used in Rust.</p>
+    <li data-md>
+     <p><a href="https://ziglang.org/documentation/master/#try">try expressions</a> used in Zig.</p>
+   </ul>
    <h2 class="heading settled" data-level="2" id="motivation"><span class="secno">2. </span><span class="content">Motivation</span><a class="self-link" href="#motivation"></a></h2>
    <h3 class="heading settled" data-level="2.1" id="use-cases"><span class="secno">2.1. </span><span class="content">Use Cases</span><a class="self-link" href="#use-cases"></a></h3>
    <h4 class="heading settled" data-level="2.1.1" id="networking-stack-error-handling-use-case"><span class="secno">2.1.1. </span><span class="content">Networking Stack Error Handling</span><a class="self-link" href="#networking-stack-error-handling-use-case"></a></h4>
@@ -2186,7 +2196,6 @@ success cases, or return the error value if present instead.</p>
    <h2 class="heading settled" data-level="5" id="proposed-wording"><span class="secno">5. </span><span class="content">Proposed wording</span><a class="self-link" href="#proposed-wording"></a></h2>
    <h2 class="heading settled" data-level="6" id="implementability"><span class="secno">6. </span><span class="content">Implementability</span><a class="self-link" href="#implementability"></a></h2>
    <h2 class="heading settled" data-level="7" id="acknowledgements"><span class="secno">7. </span><span class="content">Acknowledgements</span><a class="self-link" href="#acknowledgements"></a></h2>
-   <h2 class="heading settled" data-level="8" id="references"><span class="secno">8. </span><span class="content">References</span><a class="self-link" href="#references"></a></h2>
   </main>
 <script>
 (function() {
@@ -2317,3 +2326,11 @@ success cases, or return the error value if present instead.</p>
 
 })();
 </script>
+  <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
+  <h3 class="no-num no-ref heading settled" id="informative"><span class="content">Informative References</span><a class="self-link" href="#informative"></a></h3>
+  <dl>
+   <dt id="biblio-n3793">[N3793]
+   <dd>F. Cacciola, A. Krzemieński. <a href="https://wg21.link/n3793"><cite>A proposal to add a utility class to represent optional objects (Revision 5)</cite></a>. 3 October 2013. URL: <a href="https://wg21.link/n3793">https://wg21.link/n3793</a>
+   <dt id="biblio-p0323r10">[P0323r10]
+   <dd>JF Bastien, Vicente Botet. <a href="https://wg21.link/p0323r10"><cite>std::expected</cite></a>. 15 April 2021. URL: <a href="https://wg21.link/p0323r10">https://wg21.link/p0323r10</a>
+  </dl>
