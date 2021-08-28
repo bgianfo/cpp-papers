@@ -1,6 +1,7 @@
 name: CI
 on:
-  pull_request: {}
+  pull_request:
+      paths: ["src/**"]
 jobs:
   main:
     name: Build and Validate

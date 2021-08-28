@@ -1,8 +1,8 @@
-# Create a file called .github/workflows/auto-publish-spec-1.yml
 name: Auto Deployment
 on:
   push:
     branches: [master]
+    paths: ["src/**"]
 
 jobs:
   main:
@@ -15,4 +15,6 @@ jobs:
           TOOLCHAIN: bikeshed
           SOURCE: src/operator-question-mark.bs
           DESTINATION: operator-question-mark/index.html
+          VALIDATE_LINKS: true
+          VALIDATE_MARKUP: true
           GH_PAGES_BRANCH: gh-pages
