@@ -3,7 +3,7 @@ repos:
     hooks:
       - id: bikeshed-build
         name: check bikeshed files build
-        entry: bikeshed spec
+        entry: bikeshed update && bikeshed spec
         language: python
         types: [file]
         files: \.bs$
