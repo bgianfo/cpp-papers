@@ -3,7 +3,10 @@
 This repository tracks papers and proposals for the C++ standards committee.
 
 Papers are currently written in the [bikeshed] format, and are stored under the
-`src/` directory.
+`src/` directory. The proposals are built, validated, and deployed to github pages
+on every push to master.
+
+You can view the rendered proposals here: https://serenityos.github.io/cpp-papers/
 
 # Current Proposals
 
