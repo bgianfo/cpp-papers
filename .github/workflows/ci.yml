@@ -11,5 +11,5 @@ jobs:
         with:
           TOOLCHAIN: bikeshed
           SOURCE: src/operator-question-mark.bs
-          VALIDATE_LINKS: false
+          VALIDATE_LINKS: true
           VALIDATE_MARKUP: true
