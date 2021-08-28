@@ -1,0 +1,18 @@
+# Create a file called .github/workflows/auto-publish-spec-1.yml
+name: Auto Deployment
+on:
+  push:
+    branches: [master]
+
+jobs:
+  main:
+    name: Build, Validate and Deploy
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: w3c/spec-prod@v2
+        with:
+          TOOLCHAIN: bikeshed
+          SOURCE: src/operator-question-mark.bs
+          DESTINATION: index.html
+          GH_PAGES_BRANCH: gh-pages
