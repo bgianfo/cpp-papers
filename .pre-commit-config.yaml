@@ -1,0 +1,11 @@
+repos:
+  - repo: local
+    hooks:
+      - id: bikeshed-build
+        name: check bikeshed files build
+        entry: bikeshed spec
+        language: python
+        types: [file]
+        files: \.bs$
+        additional_dependencies: ['bikeshed']
+
