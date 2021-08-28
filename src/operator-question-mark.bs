@@ -86,7 +86,7 @@ KResultOr<SocketPair> LocalSocket::create_connected_pair(int type)
 
     auto description2 = FileDescription::create(*socket)?;
 
-    return SocketPair { description1, description2 };
+    return SocketPair { move(description1), move(description2) };
 }
 ```
 
