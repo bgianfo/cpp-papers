@@ -26,7 +26,9 @@ handling failure paths and properly propagating errors to the calling function.
 To mitigate the need for this boilerplate the postfix operator `?` can be used to automatically obtain values from
 success cases, or return the error value if present instead.
 
-Similar functionality has been used with success in other languages, such as rust's [trait based exception handling](https://github.com/rust-lang/rfcs/blob/master/text/0243-trait-based-exception-handling.md).
+Similar functionality has been used with success in other languages, such as:
+- [Trait based exception handling](https://github.com/rust-lang/rfcs/blob/master/text/0243-trait-based-exception-handling.md) used in Rust.
+- [try expressions](https://ziglang.org/documentation/master/#try) used in Zig.
 
 # Motivation # {#motivation}
 
