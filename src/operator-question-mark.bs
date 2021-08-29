@@ -36,32 +36,31 @@ Similar functionality has been used with success in other languages, such as:
 
 ### Networking Stack Error Handling ### {#networking-stack-error-handling-use-case}
 
-The following is an example of how the SerenityOS Kernel networking stack [creates a socket pair](https://github.com/SerenityOS/serenity/blob/283d8d39289db37db53c74738813e193ccfee1a1/Kernel/Net/LocalSocket.cpp), where `KResultOr<T>` is a type much like `std::expected<T,E>`
+The following is an example of how the SerenityOS Kernel networking stack [creates a socket pair](https://github.com/SerenityOS/serenity/blob/a28cd921a1df15a51555284cb74efc7d8758812f/Kernel/Net/LocalSocket.cpp), where `KResultOr<T>` is a type much like `std::expected<T,E>`
 where its contract is to return a kernel error enum value, or a value of the template parameter `T`.
 
 ```cpp
-KResultOr<SocketPair> LocalSocket::create_connected_pair(int type)
+KResultOr<SocketPair> LocalSocket::try_create_connected_pair(int type)
 {
-    auto socket_or_error = LocalSocket::create(type);
+    auto socket_or_error = LocalSocket::try_create(type);
     if (socket_or_error.is_error())
         return socket_or_error.error();
 
-    auto socket = static_ptr_cast<LocalSocket>(socket_or_error.release_value());
-    auto description1_result = FileDescription::create(*socket);
+    auto socket = socket_or_error.release_value();
+
+    auto description1_result = FileDescription::try_create(*socket);
     if (description1_result.is_error())
         return description1_result.error();
 
-    socket->m_address.sun_family = AF_LOCAL;
-    memcpy(socket->m_address.sun_path, "[socketpair]", 13);
+    if (auto result = socket->try_set_path("[socketpair]"sv); result.is_error())
+        return result;
 
-    auto& process = Process::current();
-    socket->m_acceptor = { process.pid().value(), process.uid(), process.gid() };
-
+    socket->set_acceptor(Process::current());
     socket->set_connected(true);
     socket->set_connect_side_role(Role::Connected);
-    socket->m_role = Role::Accepted;
+    socket->set_role(Role::Accepted);
 
-    auto description2_result = FileDescription::create(*socket);
+    auto description2_result = FileDescription::try_create(*socket);
     if (description2_result.is_error())
         return description2_result.error();
 
@@ -71,22 +70,19 @@ KResultOr<SocketPair> LocalSocket::create_connected_pair(int type)
 
 If we rewrite this code to instead use the proposed postfix operator `?` syntax, we get:
 ```cpp
-KResultOr<SocketPair> LocalSocket::create_connected_pair(int type)
+KResultOr<SocketPair> LocalSocket::try_create_connected_pair(int type)
 {
-    auto socket = LocalSocket::create(type)?;
-    auto description1 = FileDescription::create(*socket)?;
+    auto socket = LocalSocket::try_create(type)?;
 
-    socket->m_address.sun_family = AF_LOCAL;
-    memcpy(socket->m_address.sun_path, "[socketpair]", 13);
+    auto description1 = FileDescription::try_create(*socket)?;
 
-    auto& process = Process::current();
-    socket->m_acceptor = { process.pid().value(), process.uid(), process.gid() };
-
+    socket->try_set_path("[socketpair]"sv)?;
+    socket->set_acceptor(Process::current());
     socket->set_connected(true);
     socket->set_connect_side_role(Role::Connected);
-    socket->m_role = Role::Accepted;
+    socket->set_role(Role::Accepted);
 
-    auto description2 = FileDescription::create(*socket)?;
+    auto description2 = FileDescription::try_create(*socket)?;
 
     return SocketPair { move(description1), move(description2) };
 }
