@@ -1563,7 +1563,7 @@ Possible extra rowspan handling
   <meta content="Bikeshed version 4f053d00e, updated Tue Aug 10 14:13:32 2021 -0700" name="generator">
   <link href="https://serenityos.github.io/cpp-papers/operator-question-mark/" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="97761a6bbd89cffe8f6884945fda299a63119fa0" name="document-revision">
+  <meta content="0fe077f5918ec6221b2629d2ae7740edfa350c49" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -2141,29 +2141,28 @@ success cases, or return the error value if present instead.</p>
    <h2 class="heading settled" data-level="2" id="motivation"><span class="secno">2. </span><span class="content">Motivation</span><a class="self-link" href="#motivation"></a></h2>
    <h3 class="heading settled" data-level="2.1" id="use-cases"><span class="secno">2.1. </span><span class="content">Use Cases</span><a class="self-link" href="#use-cases"></a></h3>
    <h4 class="heading settled" data-level="2.1.1" id="networking-stack-error-handling-use-case"><span class="secno">2.1.1. </span><span class="content">Networking Stack Error Handling</span><a class="self-link" href="#networking-stack-error-handling-use-case"></a></h4>
-   <p>The following is an example of how the SerenityOS Kernel networking stack <a href="https://github.com/SerenityOS/serenity/blob/283d8d39289db37db53c74738813e193ccfee1a1/Kernel/Net/LocalSocket.cpp">creates a socket pair</a>, where <code class="highlight"><c- n>KResultOr</c-><c- o>&lt;</c-><c- n>T</c-><c- o>></c-></code> is a type much like <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>expected</c-><c- o>&lt;</c-><c- n>T</c-><c- p>,</c-><c- n>E</c-><c- o>></c-></code> where its contract is to return a kernel error enum value, or a value of the template parameter <code class="highlight"><c- n>T</c-></code>.</p>
-<pre class="language-cpp highlight"><c- n>KResultOr</c-><c- o>&lt;</c-><c- n>SocketPair</c-><c- o>></c-> <c- n>LocalSocket</c-><c- o>::</c-><c- n>create_connected_pair</c-><c- p>(</c-><c- b>int</c-> <c- n>type</c-><c- p>)</c->
+   <p>The following is an example of how the SerenityOS Kernel networking stack <a href="https://github.com/SerenityOS/serenity/blob/a28cd921a1df15a51555284cb74efc7d8758812f/Kernel/Net/LocalSocket.cpp">creates a socket pair</a>, where <code class="highlight"><c- n>KResultOr</c-><c- o>&lt;</c-><c- n>T</c-><c- o>></c-></code> is a type much like <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>expected</c-><c- o>&lt;</c-><c- n>T</c-><c- p>,</c-><c- n>E</c-><c- o>></c-></code> where its contract is to return a kernel error enum value, or a value of the template parameter <code class="highlight"><c- n>T</c-></code>.</p>
+<pre class="language-cpp highlight"><c- n>KResultOr</c-><c- o>&lt;</c-><c- n>SocketPair</c-><c- o>></c-> <c- n>LocalSocket</c-><c- o>::</c-><c- n>try_create_connected_pair</c-><c- p>(</c-><c- b>int</c-> <c- n>type</c-><c- p>)</c->
 <c- p>{</c->
-    <c- k>auto</c-> <c- n>socket_or_error</c-> <c- o>=</c-> <c- n>LocalSocket</c-><c- o>::</c-><c- n>create</c-><c- p>(</c-><c- n>type</c-><c- p>);</c->
+    <c- k>auto</c-> <c- n>socket_or_error</c-> <c- o>=</c-> <c- n>LocalSocket</c-><c- o>::</c-><c- n>try_create</c-><c- p>(</c-><c- n>type</c-><c- p>);</c->
     <c- k>if</c-> <c- p>(</c-><c- n>socket_or_error</c-><c- p>.</c-><c- n>is_error</c-><c- p>())</c->
         <c- k>return</c-> <c- n>socket_or_error</c-><c- p>.</c-><c- n>error</c-><c- p>();</c->
 
-    <c- k>auto</c-> <c- n>socket</c-> <c- o>=</c-> <c- n>static_ptr_cast</c-><c- o>&lt;</c-><c- n>LocalSocket</c-><c- o>></c-><c- p>(</c-><c- n>socket_or_error</c-><c- p>.</c-><c- n>release_value</c-><c- p>());</c->
-    <c- k>auto</c-> <c- n>description1_result</c-> <c- o>=</c-> <c- n>FileDescription</c-><c- o>::</c-><c- n>create</c-><c- p>(</c-><c- o>*</c-><c- n>socket</c-><c- p>);</c->
+    <c- k>auto</c-> <c- n>socket</c-> <c- o>=</c-> <c- n>socket_or_error</c-><c- p>.</c-><c- n>release_value</c-><c- p>();</c->
+
+    <c- k>auto</c-> <c- n>description1_result</c-> <c- o>=</c-> <c- n>FileDescription</c-><c- o>::</c-><c- n>try_create</c-><c- p>(</c-><c- o>*</c-><c- n>socket</c-><c- p>);</c->
     <c- k>if</c-> <c- p>(</c-><c- n>description1_result</c-><c- p>.</c-><c- n>is_error</c-><c- p>())</c->
         <c- k>return</c-> <c- n>description1_result</c-><c- p>.</c-><c- n>error</c-><c- p>();</c->
 
-    <c- n>socket</c-><c- o>-></c-><c- n>m_address</c-><c- p>.</c-><c- n>sun_family</c-> <c- o>=</c-> <c- n>AF_LOCAL</c-><c- p>;</c->
-    <c- n>memcpy</c-><c- p>(</c-><c- n>socket</c-><c- o>-></c-><c- n>m_address</c-><c- p>.</c-><c- n>sun_path</c-><c- p>,</c-> <c- s>"[socketpair]"</c-><c- p>,</c-> <c- mi>13</c-><c- p>);</c->
+    <c- k>if</c-> <c- p>(</c-><c- k>auto</c-> <c- n>result</c-> <c- o>=</c-> <c- n>socket</c-><c- o>-></c-><c- n>try_set_path</c-><c- p>(</c-><c- s>"[socketpair]"</c-><c- n>sv</c-><c- p>);</c-> <c- n>result</c-><c- p>.</c-><c- n>is_error</c-><c- p>())</c->
+        <c- k>return</c-> <c- n>result</c-><c- p>;</c->
 
-    <c- k>auto</c-><c- o>&amp;</c-> <c- n>process</c-> <c- o>=</c-> <c- n>Process</c-><c- o>::</c-><c- n>current</c-><c- p>();</c->
-    <c- n>socket</c-><c- o>-></c-><c- n>m_acceptor</c-> <c- o>=</c-> <c- p>{</c-> <c- n>process</c-><c- p>.</c-><c- n>pid</c-><c- p>().</c-><c- n>value</c-><c- p>(),</c-> <c- n>process</c-><c- p>.</c-><c- n>uid</c-><c- p>(),</c-> <c- n>process</c-><c- p>.</c-><c- n>gid</c-><c- p>()</c-> <c- p>};</c->
-
+    <c- n>socket</c-><c- o>-></c-><c- n>set_acceptor</c-><c- p>(</c-><c- n>Process</c-><c- o>::</c-><c- n>current</c-><c- p>());</c->
     <c- n>socket</c-><c- o>-></c-><c- n>set_connected</c-><c- p>(</c->true<c- p>);</c->
     <c- n>socket</c-><c- o>-></c-><c- n>set_connect_side_role</c-><c- p>(</c-><c- n>Role</c-><c- o>::</c-><c- n>Connected</c-><c- p>);</c->
-    <c- n>socket</c-><c- o>-></c-><c- n>m_role</c-> <c- o>=</c-> <c- n>Role</c-><c- o>::</c-><c- n>Accepted</c-><c- p>;</c->
+    <c- n>socket</c-><c- o>-></c-><c- n>set_role</c-><c- p>(</c-><c- n>Role</c-><c- o>::</c-><c- n>Accepted</c-><c- p>);</c->
 
-    <c- k>auto</c-> <c- n>description2_result</c-> <c- o>=</c-> <c- n>FileDescription</c-><c- o>::</c-><c- n>create</c-><c- p>(</c-><c- o>*</c-><c- n>socket</c-><c- p>);</c->
+    <c- k>auto</c-> <c- n>description2_result</c-> <c- o>=</c-> <c- n>FileDescription</c-><c- o>::</c-><c- n>try_create</c-><c- p>(</c-><c- o>*</c-><c- n>socket</c-><c- p>);</c->
     <c- k>if</c-> <c- p>(</c-><c- n>description2_result</c-><c- p>.</c-><c- n>is_error</c-><c- p>())</c->
         <c- k>return</c-> <c- n>description2_result</c-><c- p>.</c-><c- n>error</c-><c- p>();</c->
 
@@ -2171,22 +2170,19 @@ success cases, or return the error value if present instead.</p>
 <c- p>}</c->
 </pre>
    <p>If we rewrite this code to instead use the proposed postfix operator <code class="highlight"><c- o>?</c-></code> syntax, we get:</p>
-<pre class="language-cpp highlight"><c- n>KResultOr</c-><c- o>&lt;</c-><c- n>SocketPair</c-><c- o>></c-> <c- n>LocalSocket</c-><c- o>::</c-><c- n>create_connected_pair</c-><c- p>(</c-><c- b>int</c-> <c- n>type</c-><c- p>)</c->
+<pre class="language-cpp highlight"><c- n>KResultOr</c-><c- o>&lt;</c-><c- n>SocketPair</c-><c- o>></c-> <c- n>LocalSocket</c-><c- o>::</c-><c- n>try_create_connected_pair</c-><c- p>(</c-><c- b>int</c-> <c- n>type</c-><c- p>)</c->
 <c- p>{</c->
-    <c- k>auto</c-> <c- n>socket</c-> <c- o>=</c-> <c- n>LocalSocket</c-><c- o>::</c-><c- n>create</c-><c- p>(</c-><c- n>type</c-><c- p>)</c-><c- o>?</c-><c- p>;</c->
-    <c- k>auto</c-> <c- n>description1</c-> <c- o>=</c-> <c- n>FileDescription</c-><c- o>::</c-><c- n>create</c-><c- p>(</c-><c- o>*</c-><c- n>socket</c-><c- p>)</c-><c- o>?</c-><c- p>;</c->
+    <c- k>auto</c-> <c- n>socket</c-> <c- o>=</c-> <c- n>LocalSocket</c-><c- o>::</c-><c- n>try_create</c-><c- p>(</c-><c- n>type</c-><c- p>)</c-><c- o>?</c-><c- p>;</c->
 
-    <c- n>socket</c-><c- o>-></c-><c- n>m_address</c-><c- p>.</c-><c- n>sun_family</c-> <c- o>=</c-> <c- n>AF_LOCAL</c-><c- p>;</c->
-    <c- n>memcpy</c-><c- p>(</c-><c- n>socket</c-><c- o>-></c-><c- n>m_address</c-><c- p>.</c-><c- n>sun_path</c-><c- p>,</c-> <c- s>"[socketpair]"</c-><c- p>,</c-> <c- mi>13</c-><c- p>);</c->
+    <c- k>auto</c-> <c- n>description1</c-> <c- o>=</c-> <c- n>FileDescription</c-><c- o>::</c-><c- n>try_create</c-><c- p>(</c-><c- o>*</c-><c- n>socket</c-><c- p>)</c-><c- o>?</c-><c- p>;</c->
 
-    <c- k>auto</c-><c- o>&amp;</c-> <c- n>process</c-> <c- o>=</c-> <c- n>Process</c-><c- o>::</c-><c- n>current</c-><c- p>();</c->
-    <c- n>socket</c-><c- o>-></c-><c- n>m_acceptor</c-> <c- o>=</c-> <c- p>{</c-> <c- n>process</c-><c- p>.</c-><c- n>pid</c-><c- p>().</c-><c- n>value</c-><c- p>(),</c-> <c- n>process</c-><c- p>.</c-><c- n>uid</c-><c- p>(),</c-> <c- n>process</c-><c- p>.</c-><c- n>gid</c-><c- p>()</c-> <c- p>};</c->
-
+    <c- n>socket</c-><c- o>-></c-><c- n>try_set_path</c-><c- p>(</c-><c- s>"[socketpair]"</c-><c- n>sv</c-><c- p>)</c-><c- o>?</c-><c- p>;</c->
+    <c- n>socket</c-><c- o>-></c-><c- n>set_acceptor</c-><c- p>(</c-><c- n>Process</c-><c- o>::</c-><c- n>current</c-><c- p>());</c->
     <c- n>socket</c-><c- o>-></c-><c- n>set_connected</c-><c- p>(</c->true<c- p>);</c->
     <c- n>socket</c-><c- o>-></c-><c- n>set_connect_side_role</c-><c- p>(</c-><c- n>Role</c-><c- o>::</c-><c- n>Connected</c-><c- p>);</c->
-    <c- n>socket</c-><c- o>-></c-><c- n>m_role</c-> <c- o>=</c-> <c- n>Role</c-><c- o>::</c-><c- n>Accepted</c-><c- p>;</c->
+    <c- n>socket</c-><c- o>-></c-><c- n>set_role</c-><c- p>(</c-><c- n>Role</c-><c- o>::</c-><c- n>Accepted</c-><c- p>);</c->
 
-    <c- k>auto</c-> <c- n>description2</c-> <c- o>=</c-> <c- n>FileDescription</c-><c- o>::</c-><c- n>create</c-><c- p>(</c-><c- o>*</c-><c- n>socket</c-><c- p>)</c-><c- o>?</c-><c- p>;</c->
+    <c- k>auto</c-> <c- n>description2</c-> <c- o>=</c-> <c- n>FileDescription</c-><c- o>::</c-><c- n>try_create</c-><c- p>(</c-><c- o>*</c-><c- n>socket</c-><c- p>)</c-><c- o>?</c-><c- p>;</c->
 
     <c- k>return</c-> <c- n>SocketPair</c-> <c- p>{</c-> <c- n>move</c-><c- p>(</c-><c- n>description1</c-><c- p>),</c-> <c- n>move</c-><c- p>(</c-><c- n>description2</c-><c- p>)</c-> <c- p>};</c->
 <c- p>}</c->
