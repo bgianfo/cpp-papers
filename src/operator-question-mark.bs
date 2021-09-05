@@ -90,6 +90,8 @@ KResultOr<SocketPair> LocalSocket::try_create_connected_pair(int type)
 
 # Proposal # {#proposal}
 
+**TODO:** Incorporate some of the very nice background research from [[P0709r0]] here?
+
 # Design rationale # {#design-rational}
 
 # Proposed wording # {#proposed-wording}
